@@ -11,7 +11,6 @@ function TaskList() {
 
   const API = "https://task-manager-mern-72lb.onrender.com/api/v1/tasks";
 
-  //  Fetch Tasks
   const fetchTasks = async () => {
     setLoading(true);
     setError("");
@@ -32,12 +31,10 @@ function TaskList() {
     }
   };
 
-  // load once
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  // Add Task
   const addTask = async () => {
     if (!newTask.trim()) return;
 
@@ -52,7 +49,6 @@ function TaskList() {
     }
   };
 
-  //  Toggle Complete
   const toggleTask = async (id) => {
     try {
       const res = await axios.patch(`${API}/${id}`);
@@ -63,37 +59,36 @@ function TaskList() {
     }
   };
 
-  // Delete Task
   const deleteTask = async (id) => {
     try {
       await axios.delete(`${API}/${id}`);
-
       setTasks((prev) => prev.filter((t) => t._id !== id));
     } catch {
       setError("Failed to delete task");
     }
   };
 
-  // Safe Filtering
   const incompleteTasks = tasks?.filter((t) => !t.completed) || [];
   const completedTasks = tasks?.filter((t) => t.completed) || [];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Add Task */}
-      <div className="bg-white p-4 rounded-2xl shadow-md max-w-xl mx-auto mb-6">
-        <h1 className="text-xl font-semibold mb-3">Task Manager</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-4 sm:p-6">
+      {/* Add Task Card */}
+      <div className="bg-white/80 backdrop-blur-lg border border-gray-200 p-5 rounded-2xl shadow-xl max-w-xl mx-auto mb-6">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">
+          ✨ Task Manager
+        </h1>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             placeholder="Enter task..."
-            className="flex-1 border rounded-lg px-3 py-2"
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
           />
           <button
             onClick={addTask}
-            className="bg-blue-500 text-white px-4 rounded-lg hover:bg-blue-600"
+            className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 active:scale-95 transition"
           >
             Add
           </button>
@@ -101,41 +96,47 @@ function TaskList() {
 
         <button
           onClick={() => setShowTasks(!showTasks)}
-          className="mt-4 text-blue-500 hover:underline"
+          className="mt-4 text-blue-600 font-medium hover:underline"
         >
           {showTasks ? "Hide Tasks" : "Show Tasks"}
         </button>
       </div>
 
       {/* Loading / Error */}
-      {loading && <p className="text-center">Loading...</p>}
+      {loading && (
+        <p className="text-center text-gray-600 animate-pulse">
+          Loading tasks...
+        </p>
+      )}
       {error && <p className="text-center text-red-500">{error}</p>}
 
       {/* Tasks */}
       {showTasks && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Incomplete Tasks */}
-          <div className="bg-white p-4 rounded-2xl shadow-md">
-            <h2 className="font-semibold mb-3">Incomplete Tasks</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Incomplete */}
+          <div className="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg border">
+            <h2 className="font-semibold mb-4 text-gray-700 text-lg">
+              🕒 Incomplete Tasks
+            </h2>
 
             {incompleteTasks.length === 0 ? (
-              <p className="text-gray-500">No tasks</p>
+              <p className="text-gray-400 text-sm">No tasks</p>
             ) : (
               incompleteTasks.map((task) => (
                 <div
                   key={task._id}
-                  className="flex justify-between items-center bg-gray-50 p-2 rounded-lg mb-2"
+                  className="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-3 rounded-lg mb-3 transition shadow-sm"
                 >
                   <span
                     onClick={() => toggleTask(task._id)}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-gray-800 font-medium"
                   >
                     {task.title}
                   </span>
 
                   <button
                     onClick={() => deleteTask(task._id)}
-                    className="text-red-500"
+                    className="text-red-400 hover:text-red-600 transition"
                   >
                     ❌
                   </button>
@@ -144,17 +145,19 @@ function TaskList() {
             )}
           </div>
 
-          {/* Completed Tasks */}
-          <div className="bg-white p-4 rounded-2xl shadow-md">
-            <h2 className="font-semibold mb-3">Completed Tasks</h2>
+          {/* Completed */}
+          <div className="bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg border">
+            <h2 className="font-semibold mb-4 text-gray-700 text-lg">
+              ✅ Completed Tasks
+            </h2>
 
             {completedTasks.length === 0 ? (
-              <p className="text-gray-500">No tasks</p>
+              <p className="text-gray-400 text-sm">No tasks</p>
             ) : (
               completedTasks.map((task) => (
                 <div
                   key={task._id}
-                  className="flex justify-between items-center bg-gray-50 p-2 rounded-lg mb-2"
+                  className="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-3 rounded-lg mb-3 transition shadow-sm"
                 >
                   <span
                     className="line-through text-gray-400 cursor-pointer"
@@ -165,7 +168,7 @@ function TaskList() {
 
                   <button
                     onClick={() => deleteTask(task._id)}
-                    className="text-red-500"
+                    className="text-red-400 hover:text-red-600 transition"
                   >
                     ❌
                   </button>
