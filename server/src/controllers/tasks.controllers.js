@@ -49,7 +49,6 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
 
   //find the task in DB
   const oldTask = await Task.findById(id);
-  console.log("Old task is=", oldTask);
 
   if (!oldTask) {
     throw new ApiError(404, "Task not found");
@@ -64,8 +63,6 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
       new: true,
     },
   );
-
-  console.log("Updated task is=", updatedTask);
 
   //send response
   return res
